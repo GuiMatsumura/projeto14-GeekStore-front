@@ -18,7 +18,10 @@ export default function Login() {
       email,
       password,
     };
-    const promise = axios.post("xxx", body);
+    const promise = axios.post(
+      "https://api-geekstore.herokuapp.com/session",
+      body
+    );
     promise
       .then((res) => {
         setToken(res.data.token);
