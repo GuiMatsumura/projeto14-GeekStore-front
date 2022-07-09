@@ -29,10 +29,12 @@ export default function SingUp() {
       uf,
     };
     console.log(body);
-    const promise = axios.post("xxx", body);
+    const promise = axios.post(
+      "https://api-geekstore.herokuapp.com/users",
+      body
+    );
     promise
       .then((res) => {
-        console.log(res.data);
         navigate("/entrar");
       })
       .catch((err) => {
@@ -47,6 +49,7 @@ export default function SingUp() {
           <h2>GeekStore</h2>
         </Header>
         <Main>
+          <h4>Faça seu cadastro</h4>
           <Input
             type="text"
             placeholder="Nome"
@@ -104,7 +107,7 @@ export default function SingUp() {
             />
           </Section2>
           <Button onClick={singUp}>Cadastrar</Button>
-          <Link className="teste" to="/entrar">
+          <Link className="textDecorationNone" to="/entrar">
             <h3>Já tem conta? Entre!</h3>
           </Link>
         </Main>
@@ -147,15 +150,22 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
   h3 {
     font-family: "Raleway";
     margin-top: 50px;
     color: #404040;
     font-size: 18px;
   }
-  .teste {
+  .textDecorationNone {
     text-decoration: none;
+  }
+  h4 {
+    font-family: "Raleway";
+    margin-top: 50px;
+    color: #404040;
+    font-size: 25px;
+    margin-bottom: 40px;
+    text-align: center;
   }
 `;
 
