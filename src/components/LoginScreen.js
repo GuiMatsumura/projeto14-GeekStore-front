@@ -4,12 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import TokenContext from "./context/Token";
+import UserNameContext from "./context/UserName";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [token, setToken] = useContext(TokenContext);
+  const [userName, setUserName] = useContext(UserNameContext);
 
   const navigate = useNavigate();
 
@@ -24,8 +26,9 @@ export default function Login() {
     );
     promise
       .then((res) => {
+        setUserName(res.data.name);
         setToken(res.data.token);
-        navigate("/home");
+        navigate("/");
       })
       .catch((err) => {
         alert(err);
@@ -67,7 +70,7 @@ export default function Login() {
 const Body = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   background-color: #ffffff;
 `;
 
