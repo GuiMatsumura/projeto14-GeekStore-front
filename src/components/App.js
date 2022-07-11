@@ -16,6 +16,7 @@ import Perifericos from "./Departaments/Perifericos";
 import Promotion from "./Departaments/Promotion";
 import Product from "./Product";
 import Profile from "./Profile";
+import CartScreen from "./CartScreen";
 
 export default function App() {
   const [token, setToken] = React.useState("");
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/promocao" element={<Promotion />} />
               <Route path="/produto/:id" element={<Product />} />
               <Route path="/perfil" element={<Profile />} />
+              <Route path="/cart" element={<CartScreen />} />
             </Routes>
           </BrowserRouter>
         </CartContext.Provider>

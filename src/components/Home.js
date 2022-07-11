@@ -9,8 +9,10 @@ import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UserNameContext from "./context/UserName";
 
 export default function Home() {
+  const [userName, setUserName] = useContext(UserNameContext);
   const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
   const [promotionList, setPromotionList] = useState();
@@ -71,14 +73,25 @@ export default function Home() {
             width="40px"
           />
           <h1 className="bold">GEEKstore</h1>
-          <PersonCircleOutline
-            color={"#ffffff"}
-            height="40px"
-            width="40px"
-            onClick={() => {
-              navigate("/entrar");
-            }}
-          />
+          {userName ? (
+            <PersonCircleOutline
+              color={"#ffffff"}
+              height="40px"
+              width="40px"
+              onClick={() => {
+                navigate("/perfil");
+              }}
+            />
+          ) : (
+            <PersonCircleOutline
+              color={"#ffffff"}
+              height="40px"
+              width="40px"
+              onClick={() => {
+                navigate("/entrar");
+              }}
+            />
+          )}
         </div>
         <form>
           <input placeholder="Busca..."></input>
@@ -87,7 +100,18 @@ export default function Home() {
         <div className="headerBottom"></div>
       </Header>
       <SideMenu menu={menu}>
-        <h1 className="bold">Olá, usuário</h1>
+        {userName ? (
+          <h1 className="bold">Olá, {userName}</h1>
+        ) : (
+          <h1
+            className="bold"
+            onClick={() => {
+              navigate("/entrar");
+            }}
+          >
+            Entre/Cadastre
+          </h1>
+        )}
         <button
           className="bold"
           onClick={() => {

@@ -25,7 +25,18 @@ export default function Profile() {
         </H2>
       </Header>
       <Main>
-        <h2>Olá, {userName}</h2>
+        {userName ? (
+          <h2>Olá, {userName}</h2>
+        ) : (
+          <h2
+            onClick={() => {
+              navigate("/entrar");
+            }}
+          >
+            Entre ou Cadastre
+          </h2>
+        )}
+
         <a href="https://api.whatsapp.com/send?phone=+5521970655006">
           Fale conosco
         </a>
