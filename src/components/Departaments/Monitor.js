@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { ArrowBackCircleOutline } from "react-ionicons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Monitor() {
@@ -9,15 +9,17 @@ export default function Monitor() {
 
   const [products, setProducts] = useState([]);
 
-  const promise = axios.get("https://api-geekstore.herokuapp.com/monitor");
+  useEffect(() => {
+    const promise = axios.get("https://api-geekstore.herokuapp.com/monitor");
 
-  promise.then((res) => {
-    setProducts(res.data);
-  });
-  promise.catch((err) => {
-    alert(err.response.data);
-    navigate("/");
-  });
+    promise.then((res) => {
+      setProducts(res.data);
+    });
+    promise.catch((err) => {
+      alert(err.response.data);
+      navigate("/");
+    });
+  }, []);
 
   return (
     <Body>
@@ -33,10 +35,41 @@ export default function Monitor() {
           />
         </Icon>
         <H2>
-          <h2>Monitor</h2>
+          <h2>Monitores</h2>
         </H2>
       </Header>
-      <Main></Main>
+      <Main>
+        {products.map((each) => (
+          <Container>
+            <ProductBox
+              onClick={() => {
+                navigate(`/produto/${each.id}`);
+              }}
+            >
+              <ProductImage>
+                <img src={each.img} />
+              </ProductImage>
+              <ProductDetails>
+                <ProductName>{each.name}</ProductName>
+                {each.promotion ? (
+                  <>
+                    <BeforePrice>
+                      R$ {(each.price / 100).toFixed(2)}
+                    </BeforePrice>
+                    <ProductPrice>
+                      R$ {((each.price * 90) / 10000).toFixed(2)}
+                    </ProductPrice>
+                  </>
+                ) : (
+                  <ProductPrice>
+                    R$ {(each.price / 100).toFixed(2)}
+                  </ProductPrice>
+                )}
+              </ProductDetails>
+            </ProductBox>
+          </Container>
+        ))}
+      </Main>
       <Footer>
         Caso os produtos apresentem divergências de valores, o preço válido é o
         da Sacola de compras. Vendas sujeitas a análise e confirmação de dados.
@@ -49,7 +82,8 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  background-color: #ffffff;
+  background-color: #d3d3d3;
+  height: 1030px;
 `;
 const Header = styled.div`
   width: 100vw;
@@ -57,6 +91,8 @@ const Header = styled.div`
   background-color: #0086ff;
   box-shadow: 2px 2px 2px lightgray;
   display: flex;
+  position: fixed;
+  top: 0;
 `;
 
 const Icon = styled.div`
@@ -79,7 +115,13 @@ const H2 = styled.div`
   }
 `;
 
-const Main = styled.div``;
+const Main = styled.div`
+  width: 100vw;
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 const Footer = styled.div`
   position: fixed;
@@ -94,4 +136,48 @@ const Footer = styled.div`
   font-family: "Raleway";
   color: #404040;
   font-size: 10px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const ProductBox = styled.div`
+  width: 90vw;
+  height: 200px;
+  background-color: #ffffff;
+  margin-top: 20px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px lightgray;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const ProductName = styled.div`
+  font-family: "Raleway";
+  margin-bottom: 20px;
+`;
+
+const ProductImage = styled.div`
+  img {
+    height: 150px;
+  }
+`;
+const ProductPrice = styled.div`
+  font-family: "Raleway";
+  color: #ff8900;
+  font-size: 25px;
+`;
+
+const ProductDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const BeforePrice = styled.div`
+  text-decoration: line-through;
+  font-family: "Raleway";
+  color: gray;
 `;

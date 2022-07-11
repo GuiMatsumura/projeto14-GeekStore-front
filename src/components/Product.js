@@ -1,25 +1,40 @@
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { ArrowBackCircleOutline } from "react-ionicons";
-import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ArrowBackCircleOutline } from "react-ionicons";
+import { useState, useEffect, useContext } from "react";
+import styled from "styled-components";
+import CartContext from "./context/Cart";
 
-export default function Jogos() {
+export default function Product() {
+  const [cart, setCart] = useContext(CartContext);
+
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
+  const { id } = useParams();
+  const object = {
+    id: parseInt(id),
+  };
+
+  const [product, setProduct] = useState([]);
 
   useEffect(() => {
-    const promise = axios.get("https://api-geekstore.herokuapp.com/jogos");
-
+    const promise = axios.post(
+      "https://api-geekstore.herokuapp.com/product",
+      object
+    );
     promise.then((res) => {
-      setProducts(res.data);
+      setProduct(res.data);
     });
     promise.catch((err) => {
       alert(err.response.data);
       navigate("/");
     });
   }, []);
+
+  function attCarrinho() {
+    setCart([...cart, parseInt(id)]);
+    alert("O item foi adicionado ao seu carrinho!");
+  }
 
   return (
     <Body>
@@ -35,40 +50,27 @@ export default function Jogos() {
           />
         </Icon>
         <H2>
-          <h2>Jogos</h2>
+          <h2>GeekStore</h2>
         </H2>
       </Header>
       <Main>
-        {products.map((each) => (
-          <Container>
-            <ProductBox
-              onClick={() => {
-                navigate(`/produto/${each.id}`);
-              }}
-            >
-              <ProductImage>
-                <img src={each.img} />
-              </ProductImage>
-              <ProductDetails>
-                <ProductName>{each.name}</ProductName>
-                {each.promotion ? (
-                  <>
-                    <BeforePrice>
-                      R$ {(each.price / 100).toFixed(2)}
-                    </BeforePrice>
-                    <ProductPrice>
-                      R$ {((each.price * 90) / 10000).toFixed(2)}
-                    </ProductPrice>
-                  </>
-                ) : (
-                  <ProductPrice>
-                    R$ {(each.price / 100).toFixed(2)}
-                  </ProductPrice>
-                )}
-              </ProductDetails>
-            </ProductBox>
-          </Container>
-        ))}
+        <ProductName>
+          <h2>{product.name}</h2>
+        </ProductName>
+        <ProductImage>
+          <img src={product.img} />
+        </ProductImage>
+        {product.promotion ? (
+          <>
+            <BeforePrice>R$ {(product.price / 100).toFixed(2)}</BeforePrice>
+            <ProductPrice>
+              R$ {((product.price * 90) / 10000).toFixed(2)}
+            </ProductPrice>
+          </>
+        ) : (
+          <ProductPrice>R$ {(product.price / 100).toFixed(2)}</ProductPrice>
+        )}
+        <Button onClick={attCarrinho}>Adicionar ao carrinho!</Button>
       </Main>
       <Footer>
         Caso os produtos apresentem divergências de valores, o preço válido é o
@@ -82,8 +84,8 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  background-color: #d3d3d3;
-  height: 1030px;
+  background-color: #ffffff;
+  height: 800px;
 `;
 const Header = styled.div`
   width: 100vw;
@@ -117,10 +119,10 @@ const H2 = styled.div`
 
 const Main = styled.div`
   width: 100vw;
-  margin-top: 70px;
+  margin-top: 90px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
 `;
 
 const Footer = styled.div`
@@ -138,46 +140,44 @@ const Footer = styled.div`
   font-size: 10px;
 `;
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const ProductBox = styled.div`
-  width: 90vw;
-  height: 200px;
-  background-color: #ffffff;
-  margin-top: 20px;
-  border-radius: 5px;
-  box-shadow: 2px 2px 2px lightgray;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
 const ProductName = styled.div`
+  color: black;
   font-family: "Raleway";
-  margin-bottom: 20px;
+  font-size: 30px;
 `;
 
 const ProductImage = styled.div`
   img {
-    height: 150px;
+    height: 300px;
   }
 `;
+
 const ProductPrice = styled.div`
   font-family: "Raleway";
   color: #ff8900;
-  font-size: 25px;
-`;
-
-const ProductDetails = styled.div`
-  display: flex;
-  flex-direction: column;
+  font-size: 40px;
 `;
 
 const BeforePrice = styled.div`
   text-decoration: line-through;
   font-family: "Raleway";
   color: gray;
+  font-size: 25px;
+  margin-top: 20px;
+`;
+
+const Button = styled.div`
+  height: 80px;
+  width: 320px;
+  border-radius: 5px;
+  background-color: #029905;
+  color: #ffffff;
+  font-size: 25px;
+  text-align: center;
+  font-family: "Raleway";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+  font-weight: bold;
 `;

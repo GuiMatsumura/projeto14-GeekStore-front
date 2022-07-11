@@ -1,15 +1,62 @@
-import { ReorderThreeOutline } from "react-ionicons";
-import { CartOutline } from "react-ionicons";
+import { MenuSharp, ReorderThreeOutline } from "react-ionicons";
+import { CartOutline, PersonCircleOutline } from "react-ionicons";
 import { Star } from "react-ionicons";
 import { ChevronForward } from "react-ionicons";
 import { LogoFacebook } from "react-ionicons";
 import { LogoInstagram } from "react-ionicons";
 import { LogoLinkedin } from "react-ionicons";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
+  const [promotionList, setPromotionList] = useState();
+
+  function productDisplay(product) {
+    const promotionPrice =
+      (product.price - product.price * (product.discount / 100)) / 100;
+
+    return (
+      <Product
+        onClick={() => {
+          navigate(`/produto/${product.id}`);
+        }}
+      >
+        <img src={product.img} alt="Image" />
+        <div>
+          <h1>{product.name}</h1>
+          <div>
+            <Star color={"gold"} height="15px" width="15px" />
+            <Star color={"gold"} height="15px" width="15px" />
+            <Star color={"gold"} height="15px" width="15px" />
+            <Star color={"gold"} height="15px" width="15px" />
+            <Star color={"gold"} height="15px" width="15px" />
+          </div>
+          <p className="normalPrice-promo">{`por R$ ${(
+            product.price / 100
+          ).toFixed(2)}`}</p>
+          <p className="promotionPrice orange">{`R$ ${promotionPrice.toFixed(
+            2
+          )}`}</p>
+          <p>{`10x de R$ ${(promotionPrice / 10).toFixed(2)} s/ juros`}</p>
+        </div>
+      </Product>
+    );
+  }
+
+  useEffect(() => {
+    const promisse = axios.get("https://api-geekstore.herokuapp.com/promotion");
+    promisse.then((response) => {
+      setPromotionList(response.data);
+      console.log(response.data);
+    });
+    promisse.catch(() => {
+      console.log("falhou");
+    });
+  }, []);
 
   return (
     <Container>
@@ -24,7 +71,14 @@ export default function Home() {
             width="40px"
           />
           <h1 className="bold">GEEKstore</h1>
-          <CartOutline color={"#00000"} height="40px" width="40px" />
+          <PersonCircleOutline
+            color={"#ffffff"}
+            height="40px"
+            width="40px"
+            onClick={() => {
+              navigate("/perfil");
+            }}
+          />
         </div>
         <form>
           <input placeholder="Busca..."></input>
@@ -34,16 +88,63 @@ export default function Home() {
       </Header>
       <SideMenu menu={menu}>
         <h1 className="bold">Olá, usuário</h1>
-        <button className="bold">Meus pedidos</button>
-        <button className="bold">Meus locais de entrega</button>
+        <button
+          className="bold"
+          onClick={() => {
+            navigate("/perfil");
+          }}
+        >
+          Meus pedidos
+        </button>
+        <button
+          className="bold"
+          onClick={() => {
+            navigate("/perfil");
+          }}
+        >
+          Meus locais de entrega
+        </button>
         <div className="flexColumn department">
-          <button className="bold">Departamento</button>
-          <button className="bold">Departamento</button>
-          <button className="bold">Departamento</button>
-          <button className="bold">Departamento</button>
+          <button
+            className="bold"
+            onClick={() => {
+              navigate("/hardwares");
+            }}
+          >
+            Hardwares
+          </button>
+          <button
+            className="bold"
+            onClick={() => {
+              navigate("/monitor");
+            }}
+          >
+            Monitores
+          </button>
+          <button
+            className="bold"
+            onClick={() => {
+              navigate("/perifericos");
+            }}
+          >
+            Periféricos
+          </button>
+          <button
+            className="bold"
+            onClick={() => {
+              navigate("/jogos");
+            }}
+          >
+            Jogos
+          </button>
         </div>
-        <button className="bold">Central de atendimento</button>
-        <button className="bold">Fale conosco</button>
+        <a
+          className="bold"
+          href="https://api.whatsapp.com/send?phone=+5521970655006"
+        >
+          Central de atendimento
+        </a>
+        <a className="bold">Fale conosco</a>
       </SideMenu>
       <Blur
         menu={menu}
@@ -55,87 +156,22 @@ export default function Home() {
         <div className="sectionTitle bodySize bold">Ofertas Imperdíveis</div>
         <ShowOff>
           <div className="productDisplay">
-            <Product>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
-              />
-              <div>
-                <h1>Produto</h1>
-                <div>
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                </div>
-                <p className="normalPrice-promo">R$ 300,00</p>
-                <p className="promotionPrice">R$ 270,00</p>
-                <p>10x de R$ 30,00 s/ juros</p>
-              </div>
-            </Product>
-            <Product>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
-              />
-              <div>
-                <h1>Produto</h1>
-                <div>
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                </div>
-                <p className="normalPrice-promo">R$ 300,00</p>
-                <p className="promotionPrice">R$ 270,00</p>
-                <p>10x de R$ 30,00 s/ juros</p>
-              </div>
-            </Product>
+            {promotionList ? productDisplay(promotionList[0]) : <p></p>}
+            {promotionList ? productDisplay(promotionList[1]) : <p></p>}
           </div>
           <div className="productDisplay">
-            <Product>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
-              />
-              <div>
-                <h1>Produto</h1>
-                <div>
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                </div>
-                <p className="normalPrice-promo">R$ 300,00</p>
-                <p className="promotionPrice">R$ 270,00</p>
-                <p>10x de R$ 30,00 s/ juros</p>
-              </div>
-            </Product>
-            <Product>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
-              />
-              <div>
-                <h1>Produto</h1>
-                <div>
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                  <Star color={"gold"} height="15px" width="15px" />
-                </div>
-                <p className="normalPrice-promo">R$ 300,00</p>
-                <p className="promotionPrice">R$ 270,00</p>
-                <p>10x de R$ 30,00 s/ juros</p>
-              </div>
-            </Product>
+            {promotionList ? productDisplay(promotionList[2]) : <p></p>}
+            {promotionList ? productDisplay(promotionList[3]) : <p></p>}
           </div>
           <div className="showOffNavigation">
-            <p className="blue bodySize bold">Veja todas ofertas</p>
+            <p
+              className="blue bodySize bold"
+              onClick={() => {
+                navigate("/promocao");
+              }}
+            >
+              Veja todas ofertas
+            </p>
             <ChevronForward color={"#1c71d8"} height="25px" width="25px" />
           </div>
         </ShowOff>
@@ -146,53 +182,73 @@ export default function Home() {
         </div>
         <ShowOff>
           <div className="productDisplay">
-            <Product className="backGroundBlue">
-              <h1>Departamento</h1>
+            <Product
+              className="backGroundBlue"
+              onClick={() => {
+                navigate("/hardwares");
+              }}
+            >
+              <h1>Hardware</h1>
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
+                src="https://static.kabum.com.br/conteudo/categorias/HARDWARE_1648493892.png"
+                alt="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
               />
               <div></div>
             </Product>
-            <Product className="backGroundBlue">
-              <h1>Departamento</h1>
+            <Product
+              className="backGroundBlue"
+              onClick={() => {
+                navigate("/perifericos");
+              }}
+            >
+              <h1>Periféricos</h1>
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
+                src="https://static.kabum.com.br/conteudo/categorias/PERIFERICOS.png"
+                alt="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
               />
               <div></div>
             </Product>
           </div>
           <div className="productDisplay">
-            <Product className="backGroundBlue">
-              <h1>Departamento</h1>
+            <Product
+              className="backGroundBlue"
+              onClick={() => {
+                navigate("/monitor");
+              }}
+            >
+              <h1>Monitores</h1>
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
+                src="https://static.kabum.com.br/conteudo/categorias/TV_1645045665.png"
+                alt="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
               />
               <div></div>
             </Product>
-            <Product className="backGroundBlue">
-              <h1>Departamento</h1>
+            <Product
+              className="backGroundBlue"
+              onClick={() => {
+                navigate("/jogos");
+              }}
+            >
+              <h1>Jogos</h1>
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                alt="produto"
+                src="https://static.kabum.com.br/conteudo/categorias/SERVICOS-DIGITAIS.png"
+                alt="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
               />
               <div></div>
             </Product>
           </div>
-          <div className="showOffNavigation">
-            <p className="blue bodySize bold">Todos Departamentos</p>
-            <ChevronForward color={"#1c71d8"} height="25px" width="25px" />
+          <div className="showOffNavigation backGroundBlue">
+            <p className="white bodySize bold">Todos Departamentos</p>
+            <ChevronForward color={"white"} height="25px" width="25px" />
           </div>
         </ShowOff>
       </ActiveOffer>
       <Footer>
         <p className="bold">Mídias sociais</p>
-        <div className="flex">
-          <LogoFacebook color={"#1c71d8"} height="25px" width="25px" />
-          <LogoInstagram color={"#000000"} height="25px" width="25px" />
-          <LogoLinkedin color={"#000000"} height="25px" width="25px" />
+        <div className="flex social">
+          <LogoFacebook color={"#000000"} height="30px" width="30px" />
+          <LogoInstagram color={"#000000"} height="30px" width="30px" />
+          <LogoLinkedin color={"#000000"} height="30px" width="30px" />
         </div>
         <p className="bold">GEEKstore</p>
         <div>
@@ -208,6 +264,16 @@ export default function Home() {
           </p>
         </div>
       </Footer>
+      <Cart>
+        <CartOutline
+          color={"#0086FF"}
+          height="40px"
+          width="40px"
+          onClick={() => {
+            navigate("/cart");
+          }}
+        />
+      </Cart>
     </Container>
   );
 }
@@ -271,6 +337,12 @@ const Container = styled.div`
   .blue {
     color: #0086ff;
   }
+  .white {
+    color: white;
+  }
+  .orange {
+    color: #ff8900;
+  }
   .bodySize {
     font-size: 20px;
   }
@@ -278,8 +350,11 @@ const Container = styled.div`
     margin: 20px 5px;
   }
   .showOffNavigation {
+    cursor: pointer;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-radius: 10px;
     width: 100%;
     padding: 15px;
     background: white;
@@ -298,8 +373,11 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background: #0086ff;
+  padding-top: 20px;
 
   h1 {
     font-size: 30px;
@@ -320,8 +398,16 @@ const Header = styled.div`
   }
 
   input {
+    display: flex;
+    align-items: center;
     box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    height: 50px;
     width: 100%;
+    margin: 10px 0;
+    padding: 0 20px;
+    font-size: 20px;
   }
 `;
 
@@ -349,6 +435,19 @@ const SideMenu = styled.div`
     border-radius: 10px;
     margin: 5px;
   }
+  a {
+    height: 50px;
+    font-size: 20px;
+    color: #404040;
+    background-color: #ffffff;
+    border: solid 1px #ff8900;
+    border-radius: 10px;
+    margin: 5px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   h1 {
     font-size: 25px;
@@ -369,27 +468,48 @@ const Blur = styled.div`
 `;
 
 const ActiveOffer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 380px;
   background: #f4f4f4;
 `;
 
 const ShowOff = styled.div`
-  border-radius: 10px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-around;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
 
   .productDisplay {
     display: flex;
+    justify-content: space-around;
     width: 100%;
-    margin: 0 5px;
+    border-radius: 10px;
+    overflow: hidden;
   }
 `;
 
 const Product = styled.div`
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   padding: 10px;
   margin: 2px;
+  border-radius: 10px;
   background: white;
 
   img {
     height: 125px;
-    width: 170px;
+    width: 150px;
   }
 
   h1 {
@@ -403,7 +523,7 @@ const Product = styled.div`
 
   .promotionPrice {
     font-weight: 700;
-    font-size: 30px;
+    font-size: 25px;
   }
 `;
 
@@ -412,6 +532,26 @@ const Footer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  padding: 30px 20px;
   background: #0086ff;
   color: white;
+
+  .social {
+    margin-bottom: 15px;
+  }
+`;
+
+const Cart = styled.div`
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: solid 2px orange;
+  border-radius: 100px;
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  box-shadow: 0 0 1em orange;
 `;
