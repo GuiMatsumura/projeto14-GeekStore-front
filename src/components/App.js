@@ -3,7 +3,10 @@ import React from "react";
 
 import "../css/reset.css";
 import Login from "./LoginScreen";
+import SingUp from "./SingUpScreen";
 import TokenContext from "./context/Token";
+
+
 
 export default function App() {
   const [token, setToken] = React.useState("");
@@ -12,6 +15,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/entrar" element={<Login />} />
+          <Route path="/cadastro" element={<SingUp />} />
         </Routes>
       </BrowserRouter>
     </TokenContext.Provider>
