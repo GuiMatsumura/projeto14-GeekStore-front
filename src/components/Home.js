@@ -76,7 +76,7 @@ export default function Home() {
             height="40px"
             width="40px"
             onClick={() => {
-              navigate("/perfil");
+              navigate("/entrar");
             }}
           />
         </div>
@@ -94,7 +94,7 @@ export default function Home() {
             navigate("/perfil");
           }}
         >
-          Meus pedidos
+          Meu perfil
         </button>
         <button
           className="bold"
@@ -144,7 +144,12 @@ export default function Home() {
         >
           Central de atendimento
         </a>
-        <a className="bold">Fale conosco</a>
+        <a
+          className="bold"
+          href="https://api.whatsapp.com/send?phone=+5521970655006"
+        >
+          Fale conosco
+        </a>
       </SideMenu>
       <Blur
         menu={menu}
